@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 5.1.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 10 Jun 2020 pada 13.28
--- Versi server: 10.4.11-MariaDB
--- Versi PHP: 7.4.6
+-- Generation Time: Feb 02, 2022 at 03:00 AM
+-- Server version: 10.4.18-MariaDB
+-- PHP Version: 7.3.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `hotel`
+-- Database: `kost`
 --
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `apartemen`
+-- Table structure for table `apartemen`
 --
 
 CREATE TABLE `apartemen` (
@@ -38,7 +38,7 @@ CREATE TABLE `apartemen` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `apartemen`
+-- Dumping data for table `apartemen`
 --
 
 INSERT INTO `apartemen` (`id_apartemen`, `nama_apartemen`, `id_kota`, `harga`, `harga_bulan`, `harga_tahun`, `foto`) VALUES
@@ -48,7 +48,7 @@ INSERT INTO `apartemen` (`id_apartemen`, `nama_apartemen`, `id_kota`, `harga`, `
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `kota`
+-- Table structure for table `kota`
 --
 
 CREATE TABLE `kota` (
@@ -57,7 +57,7 @@ CREATE TABLE `kota` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `kota`
+-- Dumping data for table `kota`
 --
 
 INSERT INTO `kota` (`id_kota`, `nama_kota`) VALUES
@@ -70,7 +70,7 @@ INSERT INTO `kota` (`id_kota`, `nama_kota`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `pesanan`
+-- Table structure for table `pesanan`
 --
 
 CREATE TABLE `pesanan` (
@@ -91,7 +91,7 @@ CREATE TABLE `pesanan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `pesanan`
+-- Dumping data for table `pesanan`
 --
 
 INSERT INTO `pesanan` (`id_pesanan`, `kode_booking`, `nomor_kamar`, `id_user`, `id_apartemen`, `hari`, `checkin`, `paket`, `jumlah_paket`, `total_bayar`, `bukti_transfer`, `jenis_pembayaran`, `status_pembayaran`, `tgl_pesan`) VALUES
@@ -106,82 +106,119 @@ INSERT INTO `pesanan` (`id_pesanan`, `kode_booking`, `nomor_kamar`, `id_user`, `
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `user`
+-- Table structure for table `user`
 --
 
 CREATE TABLE `user` (
   `id_user` int(11) NOT NULL,
+  `email` varchar(256) NOT NULL,
   `nama` varchar(200) NOT NULL,
   `alamat` text NOT NULL,
   `no_hp` varchar(20) NOT NULL,
   `username` varchar(200) NOT NULL,
   `password` varchar(200) NOT NULL,
-  `level` int(11) NOT NULL COMMENT '1 = admin, 2 = tamu'
+  `level` int(11) NOT NULL COMMENT '1 = admin, 2 = tamu',
+  `img` varchar(256) NOT NULL,
+  `is_verify` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data untuk tabel `user`
+-- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id_user`, `nama`, `alamat`, `no_hp`, `username`, `password`, `level`) VALUES
-(1, 'Ramdan YRKS', 'Sumedang', '082216549887', 'admin', '202cb962ac59075b964b07152d234b70', 1),
-(4, 'ramdaniel', 'cimalaka sumedang', '08221576153244', 'daniel', '827ccb0eea8a706c4c34a16891f84e7b', 2);
+INSERT INTO `user` (`id_user`, `email`, `nama`, `alamat`, `no_hp`, `username`, `password`, `level`, `img`, `is_verify`) VALUES
+(5, 'admin@admin.com', 'administrator', 'alamat admin ', '086212345678', 'admin', '21232f297a57a5a743894a0e4a801fc3', 1, 'administrator-hehe.jpg', 1),
+(6, 'user@user.com', 'user', 'alamat user', '086212345678', 'user', 'ee11cbb19052e40b07aac0ca060c23ee', 2, 'user-hehe.jpg', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `verify_account`
+--
+
+CREATE TABLE `verify_account` (
+  `id` int(11) NOT NULL,
+  `email` varchar(126) NOT NULL,
+  `token` varchar(256) NOT NULL,
+  `date_created` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `verify_account`
+--
+
+INSERT INTO `verify_account` (`id`, `email`, `token`, `date_created`) VALUES
+(6, 'user_testkos@gmail.com', 'ty1qn20749JMZrsz1OrnCP2rrkR+yh0Oo62SZfbpjhs=', 1643726149),
+(7, 'admin@admin.com', 'sV7fueuhcfjS7g9VJrCgOiF9+GzEChCbsPGnT5xWbo0=', 1643766707),
+(8, 'user@user.com', '6f4zGRzhMqKl6eIKITYgqJMlDtIOi3lHdT5Kv9rf3ac=', 1643766765);
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indeks untuk tabel `apartemen`
+-- Indexes for table `apartemen`
 --
 ALTER TABLE `apartemen`
   ADD PRIMARY KEY (`id_apartemen`);
 
 --
--- Indeks untuk tabel `kota`
+-- Indexes for table `kota`
 --
 ALTER TABLE `kota`
   ADD PRIMARY KEY (`id_kota`);
 
 --
--- Indeks untuk tabel `pesanan`
+-- Indexes for table `pesanan`
 --
 ALTER TABLE `pesanan`
   ADD PRIMARY KEY (`id_pesanan`);
 
 --
--- Indeks untuk tabel `user`
+-- Indexes for table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id_user`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- Indexes for table `verify_account`
+--
+ALTER TABLE `verify_account`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `apartemen`
+-- AUTO_INCREMENT for table `apartemen`
 --
 ALTER TABLE `apartemen`
   MODIFY `id_apartemen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT untuk tabel `kota`
+-- AUTO_INCREMENT for table `kota`
 --
 ALTER TABLE `kota`
   MODIFY `id_kota` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT untuk tabel `pesanan`
+-- AUTO_INCREMENT for table `pesanan`
 --
 ALTER TABLE `pesanan`
   MODIFY `id_pesanan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT untuk tabel `user`
+-- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `verify_account`
+--
+ALTER TABLE `verify_account`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
