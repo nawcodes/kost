@@ -13,7 +13,6 @@
                 <th scope="col">#</th>
                 <th scope="col">Tgl Pesan</th>
                 <th scope="col">Pemesan</th>
-                <th scope="col">Apartemen</th>
                 <th scope="col">Lama Kost</th>
                 <th scope="col">Total Bayar</th>
                 <th scope="col">Status Pembayaran</th>
@@ -37,7 +36,6 @@
                   <th scope="row"><?=$i?></th>
                   <td><?=tanggal($l->tgl_pesan)?></td>
                   <td><?=$l->nama?></td>
-                  <td><?=$l->nama_apartemen?></td>
                   <td><?=$l->jumlah_paket?> <?=$paket?></td>
                   <td><?=rupiah($l->total_bayar)?></td>
                   <td><?=status_pembayaran($l->status_pembayaran)?></td>
