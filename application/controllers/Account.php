@@ -48,13 +48,16 @@ class Account extends CI_Controller {
 		$username = $_POST['username'];
 		$password = md5($_POST['password']);
 		$login = $this->m_general->login($username,$password);
-		// var_dump($login);die;
 		if($login){
 			$id = $this->m_general->gDataW('user',array('username'=>$username))->row();
-			$this->session->set_userdata('id_user',$id->id_user);
-			$this->session->set_userdata('level',$id->level);
-			redirect(base_url());
-
+			if($id->is_verify == 1) {
+				$this->session->set_userdata('id_user',$id->id_user);
+				$this->session->set_userdata('level',$id->level);
+				redirect(base_url());
+			} else {
+				$this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Akun anda belum diaktifkan, silahkan check Email anda untuk mengaktifkan akun</div>');
+				redirect('account/login');
+			}
 		}else{
 			$this->session->set_flashdata('message','<div class="alert alert-danger" role="alert">Username / Password salah</div>');
 			redirect('account/login');
