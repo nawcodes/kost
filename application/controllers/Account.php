@@ -128,12 +128,19 @@ class Account extends CI_Controller {
 				$this->session->set_flashdata('message','<div class="alert alert-danger" role="alert">Email ini sudah terdaftar</div>');
 				redirect('account/register');
 			}
+			
+			$insert = $this->m_general->iData('user',array('email' => $email ,'nama'=>$nama,'alamat'=>$alamat,'no_hp'=>$no_hp,'username'=>$username,'password'=>md5($password),'level'=>'2', 'img' => $image_hidden, 'is_verify' => 0));
+			
 
 			$want = array('email' => $email, 'nama' => $nama, 'alamat' => $alamat, 'no_hp' => $no_hp, 'username' => $username, 'password' => md5($password), 'level' => '2', 'img' => $image_hidden, 'is_verify' => 0);
 
-			$insert = $this->m_general->iData('user',array('email' => $email ,'nama'=>$nama,'alamat'=>$alamat,'no_hp'=>$no_hp,'username'=>$username,'password'=>md5($password),'level'=>'2', 'img' => $image_hidden, 'is_verify' => 0));
+		
 			if($insert > 0) {
-				$this->_sendMail();
+				$emailSending = $this->_sendMail();
+				if(!$emailSending){
+					$this->session->set_flashdata('message','<div class="alert alert-danger" role="alert">Opps! Terjadi suatu kesalahan. mohon hubungi pihak admin.</div>');
+					redirect('account/register');
+				} 
 				$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Pendaftaran Berhasil, Permohonan aktivasi sudah dirikim ke email <span class="text-primary">'  . $this->input->post('email') .  '</span></div>');
 				redirect('account/login');
 			} else {
@@ -168,7 +175,8 @@ class Account extends CI_Controller {
 			'email' => $this->input->post('email'),
 			'token' => $token,
 			'date_created' => time()
-		];
+		];	
+
 		$mesg = $this->load->view('mail/register-verif', $data ,true);
 		$this->email->to($toEmail);
 		$this->email->from($fromEmail, "Tiara Kost Apartement Sukabumi");
@@ -177,11 +185,13 @@ class Account extends CI_Controller {
 		$this->email->message($mesg);
 		$mail = $this->email->send();
 		if(!$mail) {
-			echo $this->email->print_debugger();
-			die;
+			$this->db->where('email', $data['email']);
+			$this->db->delete('user');
+			return false;
 		}else{
 			$this->db->insert('verify_account', ['email' => $data['email'], 'token' => $data['token'], 'date_created' => $data['date_created']]);
 			$db = $this->db->insert_id();
+			return true;
 		}
 
 	}
